@@ -49,6 +49,9 @@ static const char *TAG = "APP";
 #define GREEN_LED_GPIO GPIO_NUM_9
 #define RED_LED_GPIO GPIO_NUM_10
 
+/* ---------------- Reset Button -------------- */
+#define RESET_BUTTON_GPIO GPIO_NUM_11
+
 /* ---------------- Timer Variables ---------------- */
 typedef enum {
     TIMER_IDLE,      // waiting for hands to touch all sensors
@@ -176,6 +179,12 @@ static void led_init(void) {
     gpio_set_direction(RED_LED_GPIO, GPIO_MODE_OUTPUT);
 }
 
+static void reset_button_init(void) {
+    gpio_reset_pin(RESET_BUTTON_GPIO);
+    gpio_set_direction(RESET_BUTTON_GPIO, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(RESET_BUTTON_GPIO, GPIO_PULLUP_ONLY);
+}
+
 /* =========================================================
  *                    Timer
  * ========================================================= */
@@ -293,13 +302,14 @@ void app_main(void) {
 
     sensor_init();
     led_init();
+    reset_button_init();
     lcd_init();
     lcd_print("TurkNasko");
 
     while (1) {
         int state = (gpio_get_level(SENSOR_1_GPIO) && gpio_get_level(SENSOR_2_GPIO) && gpio_get_level(SENSOR_3_GPIO) && gpio_get_level(SENSOR_4_GPIO));
 
-        int reset_pressed = 0;
+        int reset_pressed = (gpio_get_level(RESET_BUTTON_GPIO) == 0);
 
         update_timer(state, reset_pressed);
 
