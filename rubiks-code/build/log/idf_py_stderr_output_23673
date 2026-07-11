@@ -1,0 +1,9 @@
+Command: cmake -G Ninja -B /home/nasko/hackclub/rubiks-cube-timer/rubiks-cube-timer/rubiks-code/build -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/home/nasko/.espressif/python_env/idf6.0_py3.14_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=False /home/nasko/hackclub/rubiks-cube-timer/rubiks-cube-timer/rubiks-code
+Configuration Report               
+ ───────────────────────────────── 
+   Parser Version: 1               
+   Verbosity: default              
+   Defaults policy: sdkconfig      
+   Status: Finished successfully   
+                                   
+ ───────────────────────────────── 

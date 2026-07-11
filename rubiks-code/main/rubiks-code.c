@@ -27,6 +27,7 @@
 #include "esp_netif.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include "esp_timer.h"
 
 static const char *TAG = "APP";
 
@@ -39,7 +40,27 @@ static const char *TAG = "APP";
 #define LCD_D7  GPIO_NUM_15
 
 /* ---------------- Sensor pin ---------------- */
-#define SENSOR_GPIO GPIO_NUM_27
+#define SENSOR_1_GPIO GPIO_NUM_27
+#define SENSOR_2_GPIO GPIO_NUM_14
+#define SENSOR_3_GPIO GPIO_NUM_12
+#define SENSOR_4_GPIO GPIO_NUM_13
+
+/* ---------------- LED pins ------------------ */
+#define GREEN_LED_GPIO GPIO_NUM_9
+#define RED_LED_GPIO GPIO_NUM_10
+
+/* ---------------- Timer Variables ---------------- */
+typedef enum {
+    TIMER_IDLE,      // waiting for hands to touch all sensors
+    TIMER_READY,      // all sensors touched, waiting for release to start
+    TIMER_RUNNING,    // counting, waiting for all-touch again to stop
+    TIMER_STOPPED     // finished, showing final time until reset
+} timer_state_t;
+
+static timer_state_t timer_state = TIMER_IDLE;
+static int64_t start_time = 0;
+static int64_t stopped_elapsed = 0;
+static int prev_all_touched = 0; // for edge detection
 
 /* ---------------- ESP-NOW peer MAC (EDIT THIS) ---------------- */
 static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
@@ -138,8 +159,70 @@ static void lcd_init(void) {
  * ========================================================= */
 
 static void sensor_init(void) {
-    gpio_reset_pin(SENSOR_GPIO);
-    gpio_set_direction(SENSOR_GPIO, GPIO_MODE_INPUT);
+    gpio_reset_pin(SENSOR_1_GPIO);
+    gpio_set_direction(SENSOR_1_GPIO, GPIO_MODE_INPUT);
+    gpio_reset_pin(SENSOR_2_GPIO);
+    gpio_set_direction(SENSOR_2_GPIO, GPIO_MODE_INPUT);
+    gpio_reset_pin(SENSOR_3_GPIO);
+    gpio_set_direction(SENSOR_3_GPIO, GPIO_MODE_INPUT);
+    gpio_reset_pin(SENSOR_4_GPIO);
+    gpio_set_direction(SENSOR_4_GPIO, GPIO_MODE_INPUT);
+}
+
+static void led_init(void) {
+    gpio_reset_pin(GREEN_LED_GPIO);
+    gpio_set_direction(GREEN_LED_GPIO, GPIO_MODE_OUTPUT);
+    gpio_reset_pin(RED_LED_GPIO);
+    gpio_set_direction(RED_LED_GPIO, GPIO_MODE_OUTPUT);
+}
+
+/* =========================================================
+ *                    Timer
+ * ========================================================= */
+static void format_time(int64_t elapsed_us, char *buf, size_t buf_len) {
+    int64_t elapsed_ms = elapsed_us / 1000;
+    int minutes = (elapsed_ms / 1000) / 60;
+    int seconds = (elapsed_ms / 1000) % 60;
+    int millis  = elapsed_ms % 1000;
+    snprintf(buf, buf_len, "%02d:%02d.%03d", minutes, seconds, millis);
+}
+
+void update_timer(int all_touched, int reset_pressed) {
+    if (reset_pressed) {
+        timer_state = TIMER_IDLE;
+        prev_all_touched = 0;
+        return;
+    }
+
+    int rising_edge  = (all_touched && !prev_all_touched);  // just became fully touched
+    int falling_edge = (!all_touched && prev_all_touched);  // just released
+    prev_all_touched = all_touched;
+
+    switch (timer_state) {
+        case TIMER_IDLE:
+            if (rising_edge) {
+                timer_state = TIMER_READY; // all touched, now wait for release
+            }
+            break;
+
+        case TIMER_READY:
+            if (falling_edge) {
+                start_time = esp_timer_get_time();
+                timer_state = TIMER_RUNNING; // released -> start counting
+            }
+            break;
+
+        case TIMER_RUNNING:
+            if (rising_edge) { // touched all again -> stop
+                stopped_elapsed = esp_timer_get_time() - start_time;
+                timer_state = TIMER_STOPPED;
+            }
+            break;
+
+        case TIMER_STOPPED:
+            // do nothing until reset
+            break;
+    }
 }
 
 /* =========================================================
@@ -209,17 +292,47 @@ void app_main(void) {
     espnow_init();
 
     sensor_init();
+    led_init();
     lcd_init();
     lcd_print("TurkNasko");
 
     while (1) {
-        int state = gpio_get_level(SENSOR_GPIO);
+        int state = (gpio_get_level(SENSOR_1_GPIO) && gpio_get_level(SENSOR_2_GPIO) && gpio_get_level(SENSOR_3_GPIO) && gpio_get_level(SENSOR_4_GPIO));
+
+        int reset_pressed = 0;
+
+        update_timer(state, reset_pressed);
+
+        char timebuf[16];
+        int64_t display_elapsed;
+
+        if (timer_state == TIMER_RUNNING) {
+            display_elapsed = esp_timer_get_time() - start_time;
+        } else if (timer_state == TIMER_STOPPED) {
+            display_elapsed = stopped_elapsed;
+        } else {
+            display_elapsed = 0;
+        }
+
+        format_time(display_elapsed, timebuf, sizeof(timebuf));
+
 
         // Update local LCD
+        lcd_set_cursor(0, 1);
+        lcd_print(timebuf);
+        lcd_print("     "); // pad to clear leftover chars from longer previous strings
+
+        /*
+        Old code to display touch state on the LCD.
         lcd_set_cursor(0, 1);
         lcd_print("Touch: ");
         lcd_write_char(state ? '1' : '0');
         lcd_print(" ");
+        */
+
+        // Update LEDs
+        gpio_set_level(GREEN_LED_GPIO, state);
+        gpio_set_level(RED_LED_GPIO, !state);
 
         // Send over ESP-NOW
         myData.sensorState = state;
@@ -228,6 +341,6 @@ void app_main(void) {
             ESP_LOGW(TAG, "esp_now_send failed: %s", esp_err_to_name(result));
         }
 
-        vTaskDelay(pdMS_TO_TICKS(200));
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
