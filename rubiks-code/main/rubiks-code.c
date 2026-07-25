@@ -46,11 +46,11 @@ static const char *TAG = "APP";
 #define SENSOR_4_GPIO GPIO_NUM_13
 
 /* ---------------- LED pins ------------------ */
-#define GREEN_LED_GPIO GPIO_NUM_9
-#define RED_LED_GPIO GPIO_NUM_10
+#define GREEN_LED_GPIO GPIO_NUM_25
+#define RED_LED_GPIO GPIO_NUM_32
 
 /* ---------------- Reset Button -------------- */
-#define RESET_BUTTON_GPIO GPIO_NUM_11
+#define RESET_BUTTON_GPIO GPIO_NUM_26
 
 /* ---------------- Timer Variables ---------------- */
 typedef enum {
