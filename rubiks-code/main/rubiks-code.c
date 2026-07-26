@@ -69,7 +69,8 @@ static int prev_all_touched = 0; // for edge detection
 static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 typedef struct {
-    int sensorState;
+    char text[16];       // e.g. "TurkNasko" or status label
+    char time_str[16];   // pre-formatted "00:12.345"
 } struct_message;
 
 static struct_message myData;
@@ -257,12 +258,13 @@ static void on_data_recv(const esp_now_recv_info_t *info, const uint8_t *data, i
         return;
     }
     memcpy(&incoming, data, sizeof(incoming));
-    ESP_LOGI(TAG, "Received sensorState: %d", incoming.sensorState);
+    ESP_LOGI(TAG, "Received text: %s", incoming.text);
+    ESP_LOGI(TAG, "Received time_str: %s", incoming.time_str);
 
     // Reflect received value on our own LCD too, if desired:
     lcd_set_cursor(0, 1);
     lcd_print("RX: ");
-    lcd_print(incoming.sensorState ? "1 " : "0 ");
+    lcd_print(incoming.time_str);
 }
 
 static void wifi_init(void) {
@@ -344,13 +346,17 @@ void app_main(void) {
         gpio_set_level(GREEN_LED_GPIO, state);
         gpio_set_level(RED_LED_GPIO, !state);
 
+
+        // Populate the struct to send
+        strcpy(myData.time_str, timebuf);
+        strcpy(myData.text, "TurkNasko");
+
         // Send over ESP-NOW
-        myData.sensorState = state;
         esp_err_t result = esp_now_send(peerAddress, (uint8_t *)&myData, sizeof(myData));
         if (result != ESP_OK) {
             ESP_LOGW(TAG, "esp_now_send failed: %s", esp_err_to_name(result));
         }
-
+        
         vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
