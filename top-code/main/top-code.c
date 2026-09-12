@@ -12,9 +12,19 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
+static const char *TAG = "RECEIVER"; // was missing - used by mac_print()
+
+// --- LCD pin definitions (were missing) ---
+#define LCD_RS  GPIO_NUM_19
+#define LCD_EN  GPIO_NUM_23
+#define LCD_D4  GPIO_NUM_18
+#define LCD_D5  GPIO_NUM_17
+#define LCD_D6  GPIO_NUM_16
+#define LCD_D7  GPIO_NUM_15
+
 // --- Variables and Structs ---
 
-/* ---------------- ESP-NOW peer MAC (EDIT THIS) ---------------- */
+/* ---------------- ESP-NOW peer MAC ---------------- */
 static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 typedef struct {
@@ -122,6 +132,13 @@ static void mac_print(void) {
              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 }
 
+// Receiver doesn't send anything, but the callback still needs a
+// valid function to register. Kept as a harmless stub.
+static void on_data_sent(const esp_now_send_info_t *tx_info, esp_now_send_status_t status) {
+    ESP_LOGI(TAG, "Send status: %s",
+             status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
+}
+
 static void on_data_recv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
     struct_message incoming;
     if (len != sizeof(incoming)) return;
@@ -170,7 +187,7 @@ void app_main(void) {
     espnow_init();
     lcd_init();
 
-    lcd_print("Waiting...")
+    lcd_print("Waiting...");  // <-- missing semicolon fixed
 
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(1000)); // main loop delay

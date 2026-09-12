@@ -42,7 +42,7 @@ static const char *TAG = "APP";
 /* ---------------- Sensor pin ---------------- */
 #define SENSOR_1_GPIO GPIO_NUM_27
 #define SENSOR_2_GPIO GPIO_NUM_14
-#define SENSOR_3_GPIO GPIO_NUM_12
+#define SENSOR_3_GPIO GPIO_NUM_34
 #define SENSOR_4_GPIO GPIO_NUM_13
 
 /* ---------------- LED pins ------------------ */
