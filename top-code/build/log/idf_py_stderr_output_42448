@@ -1,0 +1,27 @@
+Command: cmake -G Ninja -B /home/nasko/hackclub/rubiks-cube-timer/rubiks-cube-timer/top-code/build -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/home/nasko/.espressif/python_env/idf6.0_py3.14_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=False /home/nasko/hackclub/rubiks-cube-timer/rubiks-cube-timer/top-code
+Configuration Report               
+ ───────────────────────────────── 
+   Parser Version: 1               
+   Verbosity: default              
+   Defaults policy: sdkconfig      
+   Status: Finished successfully   
+                                   
+ ───────────────────────────────── 
+You have changed variables that require your cache to be deleted.
+Configure will be re-run and you may have to reset some variables.
+The following variables have changed:
+CMAKE_C_COMPILER= /usr/lib64/ccache/gcc
+CMAKE_CXX_COMPILER= /usr/lib64/ccache/g++
+CMAKE_C_COMPILER= /usr/lib64/ccache/gcc
+CMAKE_CXX_COMPILER= /usr/lib64/ccache/g++
+CMAKE_C_COMPILER= /usr/lib64/ccache/gcc
+CMAKE_C_COMPILER= /usr/lib64/ccache/gcc
+
+Configuration Report               
+ ───────────────────────────────── 
+   Parser Version: 1               
+   Verbosity: default              
+   Defaults policy: sdkconfig      
+   Status: Finished successfully   
+                                   
+ ───────────────────────────────── 

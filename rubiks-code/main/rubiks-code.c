@@ -66,7 +66,8 @@ static int64_t stopped_elapsed = 0;
 static int prev_all_touched = 0; // for edge detection
 
 /* ---------------- ESP-NOW peer MAC (EDIT THIS) ---------------- */
-static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+// static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; Dummy
+static uint8_t peerAddress[6] = {0x88, 0xF1, 0x55, 0x31, 0xA3, 0x64};
 
 typedef struct {
     char text[16];       // e.g. "TurkNasko" or status label

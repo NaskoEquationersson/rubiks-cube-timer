@@ -1,6 +1,6 @@
-set(CMAKE_HOST_SYSTEM "Linux-7.1.3-200.fc44.x86_64")
+set(CMAKE_HOST_SYSTEM "Linux-7.1.13-200.fc44.x86_64")
 set(CMAKE_HOST_SYSTEM_NAME "Linux")
-set(CMAKE_HOST_SYSTEM_VERSION "7.1.3-200.fc44.x86_64")
+set(CMAKE_HOST_SYSTEM_VERSION "7.1.13-200.fc44.x86_64")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
 include("/home/nasko/hackclub/rubiks-cube-timer/rubiks-cube-timer/rubiks-code/build/toolchain/toolchain-esp32.cmake")

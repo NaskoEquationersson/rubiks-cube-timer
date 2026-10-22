@@ -25,7 +25,8 @@ static const char *TAG = "RECEIVER"; // was missing - used by mac_print()
 // --- Variables and Structs ---
 
 /* ---------------- ESP-NOW peer MAC ---------------- */
-static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+// static uint8_t peerAddress[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; Dummy
+static uint8_t peerAddress[6] = {0x88, 0x57, 0x21, 0x2D, 0xE2, 0x00};
 
 typedef struct {
     char text[16];       // e.g. "TurkNasko" or status label
