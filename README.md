@@ -1,29 +1,188 @@
-# Nasko's Stasis Rubik's Cube Timer
+# BufaloTimer
 
-**Aim**: To make a cheap, reliable timer for my Rubik's Cube runs that includes all the features a standard StackMat provides.
+**BufaloTimer** is a portable timer designed to record Rubik's Cube solve durations, or any run that requires hands to be free before and after the solves.
+This project is built as part of the [Hackclub Stardance Programme](https://stardance.hackclub.com/projects/39298).
 
-Here is the example circuit design of the project:
+## Features
 
-<img width="2048" height="1536" alt="newer_circuit" src="https://github.com/user-attachments/assets/a393981d-a273-4572-adbf-83266dd0bbf6" />
+- **Supports Type-C charging.** — TP4056 modules are placed in both parts for charging. USB Type-C cables that carry 2A can be used with a stable power source (a laptop is recommended).
+- **Manual Wiring is Possible.** — All prototyping is made with jumper wires, and nothing more than the materials listed in the BOM is required.
+- **Low-Latency ESP-NOW Connection** — The streamer module receives data from the timer using ESP-NOW networking once the MAC addresses of both ESP32s are placed inside the code.
+- **Tool for Finding MAC Address** — A code is present in [*grab-mac-addr*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/grab-mac-addr) folder.
+- **Easy Troubleshooting and Modifications** — The chassis is closed with 8 magnets, so if a problem occurs inside, or if you want to change the code, you can open it and do it easily. 
 
-Here is the cover that will be used to contain the Rubik's Cube timer with electronics, without electronics, the Left Hand part, the Right Hand part, and the Middle part:
+## Bulk of Materials
 
-<img width="1292" height="550" alt="wElectronics" src="https://github.com/user-attachments/assets/1aeb41b7-6d16-42ca-8949-797c4243b7b4" />
+|**Name**|**Description**|**Quantity**|
+|--------|---------------|------------|
+|Filament|PLA+ Filament for 3D Printing (Optional)|1 Roll (1 kilogram)|
+|LED|LEDs for Displaying Status|2 pieces, 1 Green and 1 Red|
+|Resistor|220Ω Resistors|2 pieces|
+|LCD|16x2 LCD Panels to Display Time|2 pieces|
+|Magnet|10x5x5 Magnets to Join the Case|8 pieces|
+|TTP223|Touch Sensors for Detecting Touch|4 pieces|
+|MT3608|Buck Converters to Increase Voltage|2 pieces|
+|TP4056|USB-C Charging Module to Charge From a Power Source|2 pieces|
+|LiPo Battery|3.7V 500mAh Lithium Polymer Battery to Power the Circuit|2 pieces|
+|USB-C Charging Cable|Cables to Charge the Battery|2 pieces|
+|Micro USB Data Cable|Cable to Flash ESP32 if It Has a Micro USB Port|2 Pieces|
+|On/Off Switch|Switch to Start/Stop the Circuit|2 pieces|
+|Push Button|Button to Reset Time|1 piece|
+|ESP32|MCUs For the Devices|2 pieces|
+|Screws|M3 or Longer Screws to Hold Pieces Together|~16 pieces (10 minimum)|
+|Jumper Cables|Cables to Connect All Circuitry|~3 Packs (36+ Cables)|
+|Hot Silicone|Silicone to Anchor Pieces|~1 piece|
+|Solder Wire|Solder to Join Circuitry|~1 piece|
+|Potentiometer|Adjustable 2K Resistors to Set LCD Contrast|2 pieces|
+|Breadboard Rail|Power Rail for Distribution of Electricity|2 pieces, 1 breadboard|
+|Soldering Flux|Flux to Solder Easily(Optional)|Arbatirary|
+|Capacitor|440μF Capacitors to Regulate Voltage|2 pieces|
 
-<img width="1172" height="458" alt="woElectronics" src="https://github.com/user-attachments/assets/c244d1b7-51a0-46a9-b7a2-543ae9a8ba3a" />
+## Setup Guide
 
-<img width="351" height="338" alt="L" src="https://github.com/user-attachments/assets/83330cf2-2005-4026-a205-6ad5d7933a90" />
+**Note**: Make sure you have ESP-IDF for flashing C code on ESP32s.
 
-<img width="637" height="452" alt="Middle" src="https://github.com/user-attachments/assets/628988a5-f6a2-4e52-9bc0-fa3e9d4adf7c" />
+### 1. **3D Printing**
 
-<img width="355" height="334" alt="R" src="https://github.com/user-attachments/assets/3917476a-40de-4634-bc56-534e390b3efd" />
+- If you are going to use jumper cables, download [*3D Files of Big Chassis*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/final_models/BigForManualWiring).
+- If you are going to use a PCB version (not designed yet), use the smaller version [*3D Files of Small Design*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/final_models/SmallForPCB).
+- Using PLA as filament is recommended.
 
-Here is the top case that would be used to communicate with the timer, with and without electronics, from the front and back:
+### 2. ESP Setup
 
-<img width="620" height="606" alt="Ekran Görüntüsü 2026-06-22 10-09-04" src="https://github.com/user-attachments/assets/47517028-8073-4e7c-9859-b2675c26a11a" />
+- Flash both ESP32s with the code in [*grab-mac-addr*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/grab-mac-addr), and note the MAC address of each one.
+- Upload both ESP32s with their respective code, and cross-reference their MAC Addresses (put the 1st address in the 2nd code, and the 2nd address in the 1st code).
+- Main Chassis must have the code in [*rubiks-code*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/rubiks-code).
+- The Streamer must have the code in [*top-code*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/top-code).
+  
+### 3.1. **Circuitry (Manual)**
 
-<img width="601" height="585" alt="Ekran Görüntüsü 2026-06-22 10-09-13" src="https://github.com/user-attachments/assets/944a0678-0b3f-4e80-b920-fe0fb51c5ec4" />
+#### 3.1.1. Main Chassis
 
-<img width="501" height="475" alt="Ekran Görüntüsü 2026-06-22 10-28-15" src="https://github.com/user-attachments/assets/3ca6b337-ab45-4bda-b727-dd2ae0fe2c9b" />
+- Cut the LiPo battery's cables close to the connection end, and solder those wires with the correct polarity to the TP4056.
+- Solder male jumper cables to the output of the TP4056.
+- Solder male jumper cables to the output of the MT3608, and female jumper cables to the input of the MT3608.
+- Solder a female jumper cable to the + input of the On/Off Switch (middle), and a male jumper cable to the + output of the switch.
+- Solder a female and a male jumper cable to both ends of the Push Button.
+- Solder a female jumper cable, a 220Ω Resistor, an LED, and a male jumper cable in order, twice.
+- Solder 2 male jumper cables and a male jumper cable to the potentiometer.
+- Solder male pins on the LCD if not present.
+- Set MT3608 to 6V with a multimeter after wiring up the battery and the MT3608.
+- Connect everything and the rail according to the table below; adjust jumper types accordingly.
+  
+|**From**|**To**|
+|---------|----------|
+|TP4050 + Out|MT3608 + In|
+|TP4056 - Out|MT3608 - In|
+|MT3608 + Out|On/Off Switch + In|
+|MT3608 - Out|Power Rail - Start|
+|On/Off Switch + Out|Power Rail + Start|
+|Capacitor Legs|One to + One to -|
+|Potentiometer 5V|Power Rail +|
+|Potentiometer GND|Power Rail -|
+|ESP32 5V|Power Rail + End|
+|ESP32 GND|Power Rail - End|
+|LCD VSS|Power Rail -|
+|LCD VDD|Power Rail +|
+|LCD V0|Potentiometer Signal In|
+|LCD RS|GPIO 19|
+|LCD RW|Power Rail -|
+|LCD E|GPIO 23|
+|LCD D4|GPIO 18|
+|LCD D5|GPIO 17|
+|LCD D6|GPIO 16|
+|LCD D7|GPIO 15|
+|LCD A|Power Rail +|
+|LCD K|Power Rail -|
+|TTP223-1 Sig|GPIO 27|
+|TTP223-1 VCC|Power Rail +|
+|TTP223-1 GND|Power Rail -|
+|TTP223-2 Sig|GPIO 14|
+|TTP223-2 VCC|Power Rail +|
+|TTP223-2 GND|Power Rail -|
+|TTP223-3 Sig|GPIO 34|
+|TTP223-3 VCC|Power Rail +|
+|TTP223-3 GND|Power Rail -|
+|TTP223-4 Sig|GPIO 13|
+|TTP223-4 VCC|Power Rail +|
+|TTP223-4 GND|Power Rail -|
+|Green LED + Anode|GPIO 25|
+|Green LED - Cathode|Resistor-1|
+|Resistor-1|Power Rail -|
+|Red LED + Anode|GPIO 32|
+|Red LED - Cathode|Resistor-2|
+|Resistor-2|Power Rail -|
+|Push Button In|GPIO 26|
+|Push Button Out|Power Rail -|
 
-<img width="508" height="452" alt="Ekran Görüntüsü 2026-06-22 10-28-27" src="https://github.com/user-attachments/assets/199b7732-1274-4ad9-b934-87c6972b1eec" />
+#### 3.1.2. Streamer Chassis
+
+- Cut the LiPo battery's cables close to the connection end, and solder those wires with the correct polarity to the TP4056.
+- Solder male jumper cables to the output of the TP4056.
+- Solder male jumper cables to the output of the MT3608, and female jumper cables to the input of the MT3608.
+- Solder a female jumper cable to the + input of the On/Off Switch (middle), and a male jumper cable to the + output of the switch.
+- Solder 2 male jumper cables and a male jumper cable to the potentiometer.
+- Solder male pins on the LCD if not present.
+- Set MT3608 to 6V with a multimeter after wiring up the battery and the MT3608.
+- Connect everything and the rail according to the table below; adjust jumper types accordingly.
+
+|**From**|**To**|
+|---------|----------|
+|TP4050 + Out|MT3608 + In|
+|TP4056 - Out|MT3608 - In|
+|MT3608 + Out|On/Off Switch + In|
+|MT3608 - Out|Power Rail - Start|
+|On/Off Switch + Out|Power Rail + Start|
+|Potentiometer 5V|Power Rail +|
+|Potentiometer GND|Power Rail -|
+|ESP32 5V|Power Rail + End|
+|ESP32 GND|Power Rail - End|
+|LCD VSS|Power Rail -|
+|LCD VDD|Power Rail +|
+|LCD V0|Potentiometer Signal In|
+|LCD RS|GPIO 19|
+|LCD RW|Power Rail -|
+|LCD E|GPIO 23|
+|LCD D4|GPIO 18|
+|LCD D5|GPIO 17|
+|LCD D6|GPIO 16|
+|LCD D7|GPIO 15|
+|LCD A|Power Rail +|
+|LCD K|Power Rail -|
+
+### 3.2. **Circuitry (PCB)**
+
+- Solder all the parts into their places described in the PCB files.
+- Make sure to plug in the battery.
+
+### 4.**Fit Inside the Chassis**
+
+- Use hot silicone to anchor pieces.
+- *Silicone magnets on the centre piece first*, and then use those as a reference to determine the polarity of the right-hand and left-hand parts.
+- Disconnect and anchor switches, buttons, and charging modules first, and then reconnect them to their respective parts.
+- Anchor LCDs inside, and anchor them before pulling all the circuitry inside.
+- Make sure you get all of the parts working inside before tightening the screws.
+- Do not forget to level all of your screws if they are longer than the chassis.
+- It is not recommended, but it is possible to use hot silicone to seal the Streamer from its sides.
+
+## Troubleshooting
+
+- **Screen Has One Row of White Boxes**: Make sure the wiring of the LCD and ESP32 is correct (it is almost always not when wiring for the first time), and check if a value above 5V is present between GND and 5V of the ESP32.
+- **ESP32 Flashes Fast and Doesn't Open**: Use ``idf.py monitor`` to check for SPI errors, and if you find one, make sure the ESP32 is wired correctly; no pins between GPIO 6 and 12 are wired, and the ESP32 receives enough voltage as described above.
+
+## 3D Models
+
+All 3D model outputs are placed in [*final-models folder*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/final_models), and all models used for scale are provided in
+[*models-used-for-scale folder*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/models_used_for_scale).
+Reference Sheets of the 3D design are also provided in the *final-models folder*, and two of them are displayed below:
+
+![*Big Design Base Shape Reference Sheet*](https://github.com/NaskoEquationersson/rubiks-cube-timer/blob/main/final_models/BigForManualWiring/ReferenceSheet.jpeg)
+![*Big Design Top Shape Reference Sheet*](https://github.com/NaskoEquationersson/rubiks-cube-timer/blob/main/final_models/BigForManualWiring/TopSheet.jpeg)
+
+## AI Usage
+
+All of the C code present in the files is AI-generated. There are some slight modifications to them, but mainly their base is made of AI output.
+
+## A Quick Note for Reviewers
+
+Hello! I am @Nasko. I am leaving this message because I noticed that the system only redeems hours I logged in this app, and not the ones that I logged in Stasis. I had 28 hours previously on this project, but Stasis closed before I could renew my design. So, I don't know if you can add those hours to this project too, or if it's in policy to do this, but I appreciate your help if you do contact me on this matter. Thanks in advance.
