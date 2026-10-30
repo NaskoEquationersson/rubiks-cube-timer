@@ -3,16 +3,21 @@
 **BufaloTimer** is a portable timer designed to record Rubik's Cube solve durations, or any run that requires hands to be free before and after the solves.
 This project is built as part of the [Hackclub Stardance Programme](https://stardance.hackclub.com/projects/39298).
 
+## Demonstration Link
+
+Here is the [*YouTube link to my video*](https://youtu.be/OXWK8hG2ITo?si=uR75ci64GHDSCI8P). There is a slight problem with the first camera, so I switched to my phone's camera at 5:51, and the LCD screens are more visible with the current contrast afterwards.
+
 ## Features
 
 - **Supports Type-C charging.** — TP4056 modules are placed in both parts for charging. USB Type-C cables that carry 2A can be used with a stable power source (a laptop is recommended).
-- **Manual Wiring is Possible.** — All prototyping is made with jumper wires, and nothing more than the materials listed in the BOM is required.
-- **Low-Latency ESP-NOW Connection** — The streamer module receives data from the timer using ESP-NOW networking once the MAC addresses of both ESP32s are placed inside the code.
+- **Manual Wiring is Possible.** — All prototyping is done with jumper wires, and nothing more than the materials listed in the BOM is required.
+- **Low-Latency ESP-NOW Connection** — The streamer module receives data from the timer using ESP-NOW networking once the MAC addresses of both ESP32s are placed in the code.
 - **Tool for Finding MAC Address** — A code is present in [*grab-mac-addr*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/grab-mac-addr) folder.
 - **Easy Troubleshooting and Modifications** — The chassis is closed with 8 magnets, so if a problem occurs inside, or if you want to change the code, you can open it and do it easily.
 - **Display for Streaming Data** — A streamer (often referred to as a "top") component is present in the project that streams the data, so it can be used in competitions to show the solving time.
 - **Four Touch Sensors** — Four touch sensors are placed on the main chassis to start and stop recording precisely.
 - **Adjustable Time Recording** — Time recording is adjustable via code, and it allows you to change the frequency of saves (although increasing clock speed may create voltage problems).
+- **Adjustable Contrast and Screen** — Screen contrast is adjustable via a potentiometer, and users can enter their name on screen using the code.
 
 ## Bulk of Materials
 
@@ -57,6 +62,7 @@ This project is built as part of the [Hackclub Stardance Programme](https://star
 - Upload both ESP32s with their respective code, and cross-reference their MAC Addresses (put the 1st address in the 2nd code, and the 2nd address in the 1st code).
 - Main Chassis must have the code in [*rubiks-code*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/rubiks-code).
 - The Streamer must have the code in [*top-code*](https://github.com/NaskoEquationersson/rubiks-cube-timer/tree/main/top-code).
+- Make sure to change display information, such as the display face, record frequency, and other variables before moving on to the circuitry.
   
 ### 3.1. **Circuitry (Manual)**
 
@@ -71,6 +77,7 @@ This project is built as part of the [Hackclub Stardance Programme](https://star
 - Solder 2 male jumper cables and a male jumper cable to the potentiometer.
 - Solder male pins on the LCD if not present.
 - Set MT3608 to 6V with a multimeter after wiring up the battery and the MT3608.
+- Adjust the contrast according to your vision using the potentiometer.
 - Connect everything and the rail according to the table below; adjust jumper types accordingly.
   
 |**From**|**To**|
@@ -127,6 +134,7 @@ This project is built as part of the [Hackclub Stardance Programme](https://star
 - Solder 2 male jumper cables and a male jumper cable to the potentiometer.
 - Solder male pins on the LCD if not present.
 - Set MT3608 to 6V with a multimeter after wiring up the battery and the MT3608.
+- Adjust the contrast according to your vision using the potentiometer.
 - Connect everything and the rail according to the table below; adjust jumper types accordingly.
 
 |**From**|**To**|
