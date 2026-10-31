@@ -1,7 +1,8 @@
 # BufaloTimer
 
 **BufaloTimer** is a portable timer designed to record Rubik's Cube solve durations, or any run that requires hands to be free before and after the solves.
-This project is built as part of the [Hackclub Stardance Programme](https://stardance.hackclub.com/projects/39298).
+This project is built as part of the [Hackclub Stardance Programme](https://stardance.hackclub.com/projects/39298); it also started as a [*Stasis Programme*](https://stasis.hackclub.com/dashboard/projects/cmqhq1m9l007l01mwyyfx0tmy).
+Please check that out too.
 
 ## Demonstration Link
 
@@ -198,4 +199,4 @@ None of the 3D designs are made with AI, and all imported designs are in [*model
 
 ## A Quick Note for Reviewers
 
-Hello! I am @Nasko. I am leaving this message because I noticed that the system only redeems hours I logged in this app, and not the ones that I logged in Stasis. I had 28 hours previously on this project, but Stasis closed before I could renew my design. So, I don't know if you can add those hours to this project too, or if it's in policy to do this, but I appreciate your help if you do contact me on this matter. Thanks in advance.
+Hello! I am @Nasko. I am leaving this message because I noticed that the system only redeems hours I logged in this app, and not the ones that I logged in Stasis. I had 28 hours previously on this project, but [*Stasis*](https://stasis.hackclub.com/dashboard/projects/cmqhq1m9l007l01mwyyfx0tmy) closed before I could renew my design. So, I don't know if you can add those hours to this project too, or if it's in policy to do this, but I appreciate your help if you do contact me on this matter. Thanks in advance.
